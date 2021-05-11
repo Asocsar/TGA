@@ -11,6 +11,32 @@ unsigned char *image;
 int width, height, pixelWidth; //meta info de la imagen
 
 
+__global__ void MaxPooling (int height, int width, int channels, int kernel_X, int kernel_Y, int *I, int *I_out)
+{
+  int x = (blockIdx.x * blockDim.x + threadIdx.x) * kernel_X;
+  int y = (blockIdx.y * blockDim.y + threadIdx.y) * kernel_Y;
+
+  int max_sum = 0;
+
+  if (x < height and y < width)
+  {
+    for (int i = x; (i < height) and (i < i + kernel_X); ++i)
+    {
+      for (int j = y; (j < width) and (j < j + kernel_Y); ++j)
+      {
+        int sum_chanels = I[i*width + j + 0] + I[i*width + j + 1] + I[i*width + j + 2];
+        if (sum_chanels > max_sum)
+        {
+          for (int c = 0; c < channels; ++c)
+          {
+            *I_out[i*(width/kernel_X) + j/kernel_Y + c] = I[i*width + j + c];
+          }
+        }
+      }
+    }
+  }
+}
+
 
 int main(int argc, char** argv)
 {
