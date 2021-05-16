@@ -50,7 +50,7 @@ int main(int argc, char** argv)
 {
   // Ficheros de entrada, de salida, tamaño filtrado y num GPUs
   if (argc == 3) { fileIN = argv[1]; fileOUT = argv[2]; kernelSize = argv[3]; numgpu = argv[4]}
-  else { printf("Usage: ./exe fileIN fileOUT\n"); exit(0); }
+  else { printf("Usage: ./exe fileIN fileOUT kernelSize numGPUs\n"); exit(0); }
 
 
   printf("Reading image...\n");
@@ -73,8 +73,8 @@ int main(int argc, char** argv)
   nBlocks_Y = height/nThreads;
   */
 
-  nThreads_X = width%kernelSize == 0? width/kernelSize : width/kernelSize + 1;
-  nThreads_Y = height%kernelSize == 0? height/kernelSize : height/kernelSize + 1;
+  nThreads_X = (width%kernelSize == 0) ? width/kernelSize : width/kernelSize + 1;
+  nThreads_Y = (height%kernelSize == 0) ? height/kernelSize : height/kernelSize + 1;
   nThreads = nThreads_X * nThreads_Y;
   nBlocks = nThreads/SIZE;
 
